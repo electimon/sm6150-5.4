@@ -1,0 +1,548 @@
+/* Copyright (c) 2018, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/clock/qcom,camcc-sm6150.h>
+#include <dt-bindings/iio/qcom,spmi-vadc.h>
+#include "../../sm6150-audio-overlay.dtsi"
+#include "dsi-panel-mot-smd-639-1080p-cmd-overlay.dtsi"
+#include "dsi-panel-mot-tianma-639-1080p-cmd-overlay.dtsi"
+#include "../moto-mem-reserve.h"
+
+/ {
+	model = "foles";
+	qcom,msm-id = <355 0x0>;
+	qcom,board-id = <0x42 0xC000>, <0x43 0xC000>;
+};
+
+&reserved_memory {
+	ramoops_mem {
+		compatible = "ramoops";
+		no-map;
+		reg = <0x0 RAMOOPS_BASE_ADDR 0x0 RAMOOPS_SIZE>;
+		console-size = <RAMOOPS_CONSOLE_SIZE>;
+		pmsg-size = <RAMOOPS_PMSG_SIZE>;
+		record-size = <RAMOOPS_RECORD_SIZE>;
+		no-dump-oops;
+	};
+};
+
+&dsi_smd_639_1080x2340_cmd_display {
+	qcom,dsi-display-active;
+};
+
+&dsi_tianma_639_1080x2340_cmd_display {
+	qcom,dsi-display-active;
+};
+
+&tlmm {
+	marley_reset_default: marley_reset_default {
+		config {
+			pins = "gpio31";
+			output-high;
+			bias-pull-up;
+			drive-strength = <16>;
+		};
+	};
+
+	nfc {
+		nfc_int_active: nfc_int_active {
+			/* active state */
+			mux {
+				/* GPIO86 NFC Read Interrupt */
+				pins = "gpio86";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio86";
+				bias-disable;
+				input-enable;
+			};
+		};
+
+		nfc_int_suspend: nfc_int_suspend {
+			/* sleep state */
+			mux {
+				/* GPIO 86 NFC Read Interrupt */
+				pins = "gpio86";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio86";
+				bias-disable;
+				input-enable;
+			};
+		};
+
+		nfc_enable_active: nfc_enable_active {
+			/* active state */
+			mux {
+				/* 84: NFC ENABLE */
+				pins = "gpio84";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio84";
+				drive-strength = <2>; /* 2 MA */
+				bias-disable;
+			};
+		};
+
+		nfc_enable_suspend: nfc_enable_suspend {
+			/* sleep state */
+			mux {
+				/* 84: NFC ENABLE */
+				pins = "gpio84";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio84";
+				drive-strength = <2>; /* 2 MA */
+				bias-disable;
+			};
+		};
+
+		nfc_115_active: nfc_115_active {
+			/* active state */
+			mux {
+				/* 84: NFC ENABLE */
+				pins = "gpio115";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio115";
+				drive-strength = <2>; /* 2 MA */
+				output-high;
+			};
+		};
+
+		nfc_115_suspend: nfc_115_suspend {
+			/* sleep state */
+			mux {
+				/* 84: NFC ENABLE */
+				pins = "gpio115";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio115";
+				drive-strength = <2>; /* 2 MA */
+				output-high;
+			};
+		};
+
+		nfc_clk_req_active: nfc_clk_req_active {
+			/* active state */
+			mux {
+				/* 50: NFC CLOCK REQUEST */
+				pins = "gpio50";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio50";
+				bias-disable;
+				input-enable;
+			};
+		};
+
+		nfc_clk_req_suspend: nfc_clk_req_suspend {
+			/* sleep state */
+			mux {
+				/* 50: NFC CLOCK REQUEST */
+				pins = "gpio50";
+				function = "gpio";
+			};
+
+			config {
+				pins = "gpio50";
+				bias-disable;
+				input-enable;
+			};
+		};
+	};
+
+	fps_rst_active: fps_rst_active {
+		/* active state */
+		mux {
+			pins = "gpio46";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio46";
+			drive-strength = <2>; /* 2 MA */
+			output-low;
+		};
+	};
+
+	fps_rst_suspend: fps_rst_suspend {
+		/* sleep state */
+		mux {
+			pins = "gpio46";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio46";
+			drive-strength = <2>; /* 2 MA */
+		};
+	};
+
+	fps_int_active: fps_int_active {
+		/* active state */
+		mux {
+			pins = "gpio93";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio93";
+			drive-strength = <2>; /* 2 MA */
+			bias-disable;
+			input-enable;
+		};
+	};
+
+	fps_int_suspend: fps_int_suspend {
+		/* sleep state */
+		mux {
+			pins = "gpio93";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio93";
+			drive-strength = <2>; /* 2 MA */
+			bias-disable;
+			input-enable;
+		};
+	};
+
+	haptic_irq {
+		haptic_irq_default: haptic_irq_default {
+			pins = "gpio97";
+			bias-pull-up;
+		};
+	};
+
+	touch_int_mux {
+		touch_int_active: active {
+			mux {
+				pins = "gpio89";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio89";
+				drive-strength = <2>;
+				bias-pull-up;
+			};
+		};
+
+		touch_int_suspend: default {
+			mux {
+				pins = "gpio89";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio89";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+	};
+
+	touch_reset_mux {
+		touch_reset_active: active {
+			mux {
+				pins = "gpio88";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio88";
+				drive-strength = <2>;
+				bias-disable;
+			};
+		};
+
+		touch_reset_suspend: default {
+			mux {
+				pins = "gpio88";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio88";
+				drive-strength = <2>;
+				bias-pull-down;
+				output-low;
+			};
+		};
+	};
+
+        tps61280_en_default: tps61280_en_default {
+               mux {
+                        pins = "gpio60";
+               };
+               config {
+                        pins = "gpio60";
+                        drive_strength = <16>;
+                        output-high;
+              };
+        };
+
+	sx933x_irq_default: sx933x_irq_default {
+		mux {
+			pins = "gpio110";
+			function = "gpio";
+		};
+		config {
+			pins = "gpio110";
+			drive-strength = <8>;
+			bias-pull-up;
+		};
+	};
+};
+
+&soc {
+	dsi_panel_pwr_supply_vdd_amoled: dsi_panel_pwr_supply_vdd_amoled {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		qcom,panel-supply-entry@0 {
+			reg = <0>;
+			qcom,supply-name = "vddio";
+			qcom,supply-min-voltage = <1800000>;
+			qcom,supply-max-voltage = <1800000>;
+			qcom,supply-enable-load = <62000>;
+			qcom,supply-disable-load = <80>;
+			qcom,supply-post-on-sleep = <20>;
+		};
+
+		qcom,panel-supply-entry@1 {
+			reg = <1>;
+			qcom,supply-name = "vdd";
+			qcom,supply-min-voltage = <3000000>;
+			qcom,supply-max-voltage = <3000000>;
+			qcom,supply-enable-load = <857000>;
+			qcom,supply-disable-load = <0>;
+			qcom,supply-post-on-sleep = <0>;
+		};
+	};
+
+	dsi_smd_639_1080x2340_cmd_display: qcom,dsi-display@5 {
+		label = "dsi_smd_639_1080x2340_cmd_display";
+		qcom,display-type = "primary";
+
+		qcom,dsi-ctrl-num = <0>;
+		qcom,dsi-phy-num = <0>;
+		qcom,dsi-select-clocks = "mux_byte_clk0", "mux_pixel_clk0";
+
+		qcom,dsi-panel = <&mot_smd_639_1080p_cmd_v1>;
+	};
+
+	dsi_tianma_639_1080x2340_cmd_display: qcom,dsi-display@6 {
+		label = "dsi_tianma_639_1080x2340_cmd_display";
+		qcom,display-type = "primary";
+
+		qcom,dsi-ctrl-num = <0>;
+		qcom,dsi-phy-num = <0>;
+		qcom,dsi-select-clocks = "mux_byte_clk0", "mux_pixel_clk0";
+
+		qcom,dsi-panel = <&mot_tianma_639_1080p_cmd_v1>;
+	};
+};
+
+&pm6150_vib {
+	status = "disable";
+};
+
+&pm6150_vadc {
+	chg_therm {
+		reg = <ADC5_AMUX_THM3_100K_PU>;
+		label = "chg_therm";
+		qcom,ratiometric;
+		qcom,hw-settle-time = <200>;
+		qcom,pre-scaling = <1 1>;
+	};
+};
+
+&pm6150_adc_tm {
+	io-channels = <&pm6150_vadc ADC5_XO_THERM_100K_PU>,
+			<&pm6150_vadc ADC5_AMUX_THM2_100K_PU>,
+			<&pm6150_vadc ADC5_AMUX_THM3_100K_PU>,
+			<&pm6150_vadc ADC5_AMUX_THM4_100K_PU>;
+
+	/* Channel nodes */
+	chg_therm {
+		reg = <ADC5_AMUX_THM3_100K_PU>;
+		qcom,ratiometric;
+		qcom,hw-settle-time = <200>;
+	};
+};
+
+&pm6150l_vadc {
+	msm_therm {
+		reg = <ADC5_AMUX_THM1_100K_PU>;
+		label = "msm_therm";
+		qcom,ratiometric;
+		qcom,hw-settle-time = <200>;
+		qcom,pre-scaling = <1 1>;
+	};
+
+	pa_therm0 {
+		reg = <ADC5_AMUX_THM2_100K_PU>;
+		label = "pa_therm0";
+		qcom,ratiometric;
+		qcom,hw-settle-time = <200>;
+		qcom,pre-scaling = <1 1>;
+	};
+};
+
+&pm6150l_adc_tm {
+	/* Channel nodes */
+	msm_therm {
+		reg = <ADC5_AMUX_THM1_100K_PU>;
+		qcom,ratiometric;
+		qcom,hw-settle-time = <200>;
+	};
+
+	pa_therm0 {
+		reg = <ADC5_AMUX_THM2_100K_PU>;
+		qcom,ratiometric;
+		qcom,hw-settle-time = <200>;
+	};
+};
+
+&pm6150l_wled {
+	status = "disable";
+};
+
+&pm6150l_lcdb {
+	status = "disable";
+};
+
+&sde_dsi {
+	qcom,dsi-display-list =
+		<&dsi_smd_639_1080x2340_cmd_display
+		 &dsi_tianma_639_1080x2340_cmd_display>;
+
+	/delete-property/vddio-supply;
+	/delete-property/lab-supply;
+	/delete-property/ibb-supply;
+
+	vddio-supply = <&pm6150_l15>;
+	vdd-supply = <&pm6150_l18>;
+	qcom,platform-mot-ext-feature-enable;
+};
+
+&mdss_dsi_phy0 {
+	/delete-property/qcom,platform-strength-ctrl;
+	qcom,platform-strength-cfg-count = <3>;
+	qcom,platform-strength-ctrl = [ff 06 66
+					ff 06 66
+					ff 06 66
+					ff 06 66
+					ff 00 66];
+};
+
+&mot_smd_639_1080p_cmd_v1 {
+	qcom,panel-supply-entries = <&dsi_panel_pwr_supply_vdd_amoled>;
+	qcom,platform-te-gpio = <&tlmm 90 0>;
+	qcom,platform-reset-gpio = <&tlmm 91 0>;
+	qcom,panel-te-source = <0>;
+
+	qcom,mdss-dsi-t-clk-post = <0x0f>;
+	qcom,mdss-dsi-t-clk-pre = <0x37>;
+	/* Enable ESD checking */
+	qcom,esd-check-enabled;
+	qcom,mdss-dsi-panel-status-check-mode = "te_signal_check";
+	//qcom,mdss-dsi-panel-status-read-length = <1>;
+	//qcom,mdss-dsi-panel-status-command = [06 01 00 01 00 00 01 0A];
+	//qcom,mdss-dsi-panel-status-command-state = "dsi_hs_mode";
+	//qcom,mdss-dsi-panel-status-value = <0x9c>;
+	//qcom,mdss-dsi-panel-on-check-value = <0x9c>;
+	qcom,mdss-dsi-no-panel-on-read-support;
+
+	qcom,mdss-dsi-display-timings {
+		timing@0{
+			qcom,mdss-dsi-panel-phy-timings =
+				[26 20 0A 0B 06 03 04 a0
+				26 20 0A 0B 06 03 04 a0
+				26 20 0A 0B 06 03 04 a0
+				26 20 0A 0B 06 03 04 a0
+				26 20 0A 0B 06 03 04 a0];
+
+			qcom,display-topology = <1 0 1>;
+			qcom,default-topology-index = <0>;
+
+			qcom,mdss-dsi-hbm-dim-off-command = [
+				39 00 00 00 00 00 03 F0 5A 5A
+				39 00 00 00 00 00 03 B7 01 58
+				15 01 00 00 00 00 02 B0 07
+				15 01 00 00 00 00 02 B7 12
+				39 00 00 00 00 00 03 F0 5A 5A];
+
+			qcom,mdss-dsi-panel-clockrate = <1102000000>;
+		};
+	};
+};
+
+&mot_tianma_639_1080p_cmd_v1 {
+	qcom,panel-supply-entries = <&dsi_panel_pwr_supply_vdd_amoled>;
+	qcom,platform-te-gpio = <&tlmm 90 0>;
+	qcom,platform-reset-gpio = <&tlmm 91 0>;
+	qcom,panel-te-source = <0>;
+
+	qcom,mdss-dsi-t-clk-post = <0x0f>;
+	qcom,mdss-dsi-t-clk-pre = <0x37>;
+	/* Enable ESD checking */
+	qcom,esd-check-enabled;
+	qcom,mdss-dsi-panel-status-check-mode = "te_signal_check";
+	//qcom,mdss-dsi-panel-status-read-length = <1>;
+	//qcom,mdss-dsi-panel-status-command = [06 01 00 01 00 00 01 0A];
+	//qcom,mdss-dsi-panel-status-command-state = "dsi_hs_mode";
+	//qcom,mdss-dsi-panel-status-value = <0x0c>;
+	//qcom,mdss-dsi-panel-on-check-value = <0x1c>;
+	qcom,mdss-dsi-no-panel-on-read-support;
+
+	qcom,mdss-dsi-display-timings {
+		timing@0{
+			qcom,mdss-dsi-panel-phy-timings =
+				[26 20 0A 0B 06 03 04 a0
+				26 20 0A 0B 06 03 04 a0
+				26 20 0A 0B 06 03 04 a0
+				26 20 0A 0B 06 03 04 a0
+				26 20 0A 0B 06 03 04 a0];
+
+			qcom,display-topology = <1 0 1>;
+			qcom,default-topology-index = <0>;
+
+			qcom,mdss-dsi-panel-clockrate = <1102000000>;
+		};
+	};
+};
+
+/*&spmi_bus {
+	qcom,pm6150@0 {
+		pm6150_clkdiv {
+			assigned-clock-rates = <2400000>;
+		};
+	};
+};*/
