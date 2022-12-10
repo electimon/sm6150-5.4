@@ -1682,7 +1682,7 @@
 		reset-names = "rst";
 		non-removable;
 
-		status = "disabled";
+		status = "okay";
 		qos0 {
 			mask = <0xc0>;
 			vote = <67>;

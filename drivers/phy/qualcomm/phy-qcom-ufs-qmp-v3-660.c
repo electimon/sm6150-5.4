@@ -219,14 +219,18 @@ static int ufs_qcom_phy_qmp_v3_660_probe(struct platform_device *pdev)
 	int err = 0;
 
 	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
+	pr_err("LMFAO");
 	if (!phy) {
+		pr_err("LMFAOOOOOOO");
 		err = -ENOMEM;
 		goto out;
 	}
+	pr_err("LMFAOOOOOO2O");
 
 	generic_phy = ufs_qcom_phy_generic_probe(pdev, &phy->common_cfg,
 				&ufs_qcom_phy_qmp_v3_660_phy_ops,
 				&phy_v3_660_ops);
+	pr_err("LMFAOO");
 
 	if (!generic_phy) {
 		dev_err(dev, "%s: ufs_qcom_phy_generic_probe() failed\n",
@@ -234,6 +238,7 @@ static int ufs_qcom_phy_qmp_v3_660_probe(struct platform_device *pdev)
 		err = -EIO;
 		goto out;
 	}
+	pr_err("LMFAOOOOOOO3");
 
 	phy_set_drvdata(generic_phy, phy);
 

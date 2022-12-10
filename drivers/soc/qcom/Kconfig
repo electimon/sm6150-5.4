@@ -1554,4 +1554,16 @@ config PLATFORM_AUTO
 source "drivers/soc/qcom/icnss2/Kconfig"
 
 source "drivers/soc/qcom/gnsssirf/Kconfig"
+
+config MOTOROLA_DTBS
+	bool "Motorola specific DTB selection"
+	help
+	  Say 'Y' here to enable selection of Motorola specific DTB.
+
+config FOLES_DTB
+	bool "Motorola Z4 (Foles)"
+	depends on MOTOROLA_DTBS
+	help
+	  Say 'Y' here to enable compliation of the Motorola Z4 DTB.
+
 endmenu

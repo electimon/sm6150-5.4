@@ -320,20 +320,27 @@ int qcom_icc_rpmh_probe(struct platform_device *pdev)
 	size_t num_nodes, i;
 	int ret;
 
+	dev_err(&pdev->dev, "we here1");
+
 	desc = of_device_get_match_data(&pdev->dev);
 	if (!desc)
 		return -EINVAL;
 
+	dev_err(&pdev->dev, "we here2");
+
 	qnodes = desc->nodes;
 	num_nodes = desc->num_nodes;
 
+	dev_err(&pdev->dev, "we here3");
 	qp = devm_kzalloc(&pdev->dev, sizeof(*qp), GFP_KERNEL);
 	if (!qp)
 		return -ENOMEM;
+	dev_err(&pdev->dev, "we here4");
 
 	data = devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), GFP_KERNEL);
 	if (!data)
 		return -ENOMEM;
+	dev_err(&pdev->dev, "we here5");
 
 	provider = &qp->provider;
 	provider->dev = &pdev->dev;
@@ -343,44 +350,53 @@ int qcom_icc_rpmh_probe(struct platform_device *pdev)
 	provider->xlate = of_icc_xlate_onecell;
 	INIT_LIST_HEAD(&provider->nodes);
 	provider->data = data;
+	dev_err(&pdev->dev, "we here6");
 
 	qp->dev = &pdev->dev;
 	qp->bcms = desc->bcms;
 	qp->num_bcms = desc->num_bcms;
 	qp->nodes = desc->nodes;
 	qp->num_nodes = desc->num_nodes;
+	dev_err(&pdev->dev, "we here7");
 
 	qp->num_voters = desc->num_voters;
 	qp->voters = devm_kcalloc(&pdev->dev, qp->num_voters,
 				  sizeof(*qp->voters), GFP_KERNEL);
+	dev_err(&pdev->dev, "we here8");
 
 	if (!qp->voters)
 		return -ENOMEM;
+	dev_err(&pdev->dev, "we here9");
 
 	for (i = 0; i < qp->num_voters; i++) {
 		qp->voters[i] = of_bcm_voter_get(qp->dev, desc->voters[i]);
 		if (IS_ERR(qp->voters[i]))
 			return PTR_ERR(qp->voters[i]);
 	}
+	dev_err(&pdev->dev, "we here10");
 
 	qp->regmap = qcom_icc_rpmh_map(pdev, desc);
 	if (IS_ERR(qp->regmap))
 		return PTR_ERR(qp->regmap);
+	dev_err(&pdev->dev, "we here11");
 
 	ret = icc_provider_add(provider);
 	if (ret) {
 		dev_err(&pdev->dev, "error adding interconnect provider\n");
 		return ret;
 	}
+	dev_err(&pdev->dev, "we here12");
 
 	qp->num_clks = devm_clk_bulk_get_all(qp->dev, &qp->clks);
 	if (qp->num_clks < 0) {
 		icc_provider_del(provider);
 		return qp->num_clks;
 	}
+	dev_err(&pdev->dev, "we here13");
 
 	for (i = 0; i < qp->num_bcms; i++)
 		qcom_icc_bcm_init(qp->bcms[i], &pdev->dev);
+	dev_err(&pdev->dev, "we here14");
 
 	for (i = 0; i < num_nodes; i++) {
 		size_t j;
@@ -391,6 +407,7 @@ int qcom_icc_rpmh_probe(struct platform_device *pdev)
 		qnodes[i]->regmap = dev_get_regmap(qp->dev, NULL);
 
 		node = icc_node_create(qnodes[i]->id);
+		dev_err(&pdev->dev, "we here");
 		if (IS_ERR(node)) {
 			ret = PTR_ERR(node);
 			dev_err(&pdev->dev, "error creating node %d\n", ret);
@@ -411,12 +428,15 @@ int qcom_icc_rpmh_probe(struct platform_device *pdev)
 		data->nodes[i] = node;
 	}
 	data->num_nodes = num_nodes;
+	dev_err(&pdev->dev, "we here15");
 
 	ret = qcom_icc_rpmh_configure_qos(qp);
 	if (ret)
 		goto err;
+	dev_err(&pdev->dev, "we here16");
 
 	platform_set_drvdata(pdev, qp);
+	dev_err(&pdev->dev, "we here17");
 
 	provider->set = qcom_icc_set;
 	provider->aggregate = qcom_icc_aggregate;
@@ -424,6 +444,7 @@ int qcom_icc_rpmh_probe(struct platform_device *pdev)
 	mutex_lock(&probe_list_lock);
 	list_add_tail(&qp->probe_list, &qnoc_probe_list);
 	mutex_unlock(&probe_list_lock);
+	dev_err(&pdev->dev, "we here18 %d", ret);
 
 	return ret;
 err:

@@ -1,3 +1,3 @@
-dtbo-y += sm6150-foles-overlay.dtbo
-sm6150-foles-overlay.dtbo-base := sm6150-foles-base.dtb
+dtbo-y += foles-overlay.dtbo
+foles-overlay.dtbo-base := foles-base.dtb
 

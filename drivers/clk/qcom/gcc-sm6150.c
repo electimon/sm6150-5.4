@@ -3433,6 +3433,7 @@ static int gcc_sm6150_probe(struct platform_device *pdev)
 {
 	struct regmap *regmap;
 	int ret, is_sa6155;
+	dev_err(&pdev->dev, "WHATNAHELL\n");
 
 	vdd_cx.regulator[0] = devm_regulator_get(&pdev->dev, "vdd_cx");
 	if (IS_ERR(vdd_cx.regulator[0])) {

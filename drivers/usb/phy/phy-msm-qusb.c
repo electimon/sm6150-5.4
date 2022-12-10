@@ -1402,6 +1402,7 @@ static int qusb_phy_probe(struct platform_device *pdev)
 		return -ENOMEM;
 
 	qphy->phy.dev = dev;
+	dev_err(dev, "Malding span.\n");
 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
 							"qusb_phy_base");
 	qphy->base = devm_ioremap_resource(dev, res);
